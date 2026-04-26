@@ -1,6 +1,6 @@
 # 中南大学本科毕业设计(论文)排版规则
 
-来源：根据 `assets/csu-thesis-template.docx` 提炼。该 DOCX 由用户提供的 `附件6：中南大学毕业设计(论文)模版.doc` 转换而来。
+来源：根据 `assets/csu-thesis-template.docx` 提炼。该 DOCX 由仓库内保留的学校原始模板 `assets/附件6：中南大学毕业设计(论文)模版.doc` 转换而来。
 
 ## 页面设置
 

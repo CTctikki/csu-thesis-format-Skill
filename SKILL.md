@@ -21,7 +21,7 @@ python scripts/check_csu_thesis_docx.py path/to/thesis.docx
 python scripts/extract_docx_format.py path/to/thesis.docx
 ```
 
-需要新建论文、复制样式或比对版式时，使用 `assets/csu-thesis-template.docx` 作为标准模板资产。该文件由用户提供的学校 `.doc` 模板转换而来，后续 agent 不必再依赖旧版 Word 格式解析能力。
+需要新建论文、复制样式或比对版式时，优先使用 `assets/csu-thesis-template.docx` 作为标准模板资产。仓库同时保留了学校原始 Word 模板 `assets/附件6：中南大学毕业设计(论文)模版.doc`，用于溯源或与学校下发文件逐项比对。
 
 ## 工作流程
 
@@ -69,6 +69,7 @@ soffice --headless --convert-to docx --outdir output_dir input.doc
 ## 资源清单
 
 - `references/csu-thesis-format-rules.md`：从中南大学模板提炼出的排版规则和 Word 样式说明。
-- `assets/csu-thesis-template.docx`：可复用的中南大学论文模板资产。
+- `assets/csu-thesis-template.docx`：由原始 `.doc` 转换得到的可复用中南大学论文 DOCX 模板。
+- `assets/附件6：中南大学毕业设计(论文)模版.doc`：用户提供的学校原始 Word 模板。
 - `scripts/extract_docx_format.py`：提取 DOCX 的结构、样式、节、表格和段落样例。
 - `scripts/check_csu_thesis_docx.py`：按中南大学论文规则快速检查 DOCX。
