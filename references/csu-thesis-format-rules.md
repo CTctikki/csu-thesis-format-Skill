@@ -1,143 +1,143 @@
 # 中南大学本科毕业设计(论文)排版规则
 
-Source: extracted from `assets/csu-thesis-template.docx`, converted from the provided `附件6：中南大学毕业设计(论文)模版.doc`.
+来源：根据 `assets/csu-thesis-template.docx` 提炼。该 DOCX 由用户提供的 `附件6：中南大学毕业设计(论文)模版.doc` 转换而来。
 
-## Core Page Setup
+## 页面设置
 
-- Paper: A4 portrait, 21.0 cm x 29.7 cm.
-- Margins: top 2.5 cm, bottom 2.5 cm, left 3.0 cm, right 2.0 cm.
-- Header distance: cover/front sections may use 1.5 cm; body sections use about 1.25 cm.
-- Footer distance: 1.75 cm.
-- Main line spacing: 1.5 lines.
-- Body text block after setup is about 30 lines x 37 Chinese characters.
-- Cover page: no header and no footer.
-- Front matter after cover, including abstracts and TOC: use continuous lower-case Roman page numbers in the footer.
-- Body and back matter: use continuous Arabic page numbers in the footer.
-- Header after cover: left side contains the CSU mark/name; right side contains the thesis title. Header text is small fifth-size black Heiti (about 9 pt), with the title aligned right.
+- 纸张：A4 纵向，21.0 cm x 29.7 cm。
+- 页边距：上 2.5 cm，下 2.5 cm，左 3.0 cm，右 2.0 cm。
+- 页眉距边界：封面/前置部分可为 1.5 cm；正文部分约 1.25 cm。
+- 页脚距边界：1.75 cm。
+- 全文主体行距：1.5 倍行距。
+- 按上述设置后，版芯约为 30 行 x 37 个汉字。
+- 封面页：不设置页眉和页脚。
+- 正文前部分，包括摘要和目录：页脚使用连续小写罗马数字页码。
+- 正文及后置部分：页脚使用连续阿拉伯数字页码。
+- 封面后的页眉：左侧放中南大学校徽/校名，右侧放论文题目。页眉文字为黑体小五号，约 9 pt，题目靠右。
 
-## Typography Aliases
+## 字体字号换算
 
-- 宋体 means SimSun.
-- 黑体 means SimHei.
-- 楷体GB2312 may appear as 楷体_GB2312, KaiTi, or an equivalent Kai font.
-- 小四号 is 12 pt.
-- 五号 is 10.5 pt.
-- 小五号 is 9 pt.
-- 三号 is 16 pt.
-- 小二号 is 18 pt.
-- 一号 is about 26 pt.
+- 宋体通常对应 SimSun。
+- 黑体通常对应 SimHei。
+- 楷体GB2312 在 Word 内部可能显示为 楷体_GB2312、KaiTi 或其他等价楷体。
+- 小四号：12 pt。
+- 五号：10.5 pt。
+- 小五号：9 pt。
+- 三号：16 pt。
+- 小二号：18 pt。
+- 一号：约 26 pt。
 
-## Cover
+## 封面
 
-- Place the CSU emblem and Chinese/English school name centered, with one blank line above.
-- Main Chinese cover title: `本科毕业设计(论文)`, 45 pt Heiti, centered.
-- English cover title: `GRADUATION DESIGN(THESIS)`, first-size Heiti/black style, about 26 pt, centered.
-- Cover fields: `题目`, `学生姓名`, `指导教师`, `学院`, `专业班级`.
-- Cover field labels: small second-size Heiti, about 18 pt, centered.
-- Cover field values: small second-size 楷体GB2312, about 18 pt; allow wrapping for long titles.
-- Department copyright mark `本科生院制`: second-size Heiti, about 22 pt, centered.
-- Completion date: small second-size Heiti, about 18 pt, centered.
-- If title or field values wrap and push the page down, remove 1-2 layout-adjustment blank lines so the cover remains one page.
+- 校徽和中英文校名居中，上方空一行。
+- 中文封面主标题：`本科毕业设计(论文)`，45 pt 黑体，居中。
+- 英文封面标题：`GRADUATION DESIGN(THESIS)`，一号黑体风格，约 26 pt，居中。
+- 封面栏目包括：`题目`、`学生姓名`、`指导教师`、`学院`、`专业班级`。
+- 栏目标签：小二号黑体，约 18 pt，居中。
+- 栏目内容：小二号楷体GB2312，约 18 pt；长题目可自动换行。
+- 版权标识 `本科生院制`：二号黑体，约 22 pt，居中。
+- 完成日期：小二号黑体，约 18 pt，居中。
+- 如果题目或栏目内容换行导致封面下移，删除 1-2 行版面调整空行，保证封面仍为一页。
 
-## Chinese Abstract
+## 中文摘要
 
-- Chinese thesis title before the abstract: small second-size Heiti, centered, with one blank line above and below.
-- `摘要` heading: third-size Heiti, centered, with one blank line above and below.
-- Abstract body: about 350 Chinese characters, small fourth-size SimSun, 1.5-line spacing, first-line indent of two Chinese characters.
-- `关键词：` label: small fourth-size SimSun, bold.
-- Keywords: 3-8 terms, small fourth-size SimSun. Separate Chinese keywords with one Chinese-character space.
+- 摘要前论文中文题目：小二号黑体，居中，上下各空一行。
+- `摘要` 标题：三号黑体，居中，上下各空一行。
+- 摘要正文：约 350 个汉字，小四号宋体，1.5 倍行距，首行缩进两个汉字。
+- `关键词：` 标签：小四号宋体，加粗。
+- 关键词：3-8 个，小四号宋体；中文关键词之间空一个汉字。
 
-## English Abstract
+## 英文摘要
 
-- English thesis title: small second-size Times New Roman, bold, centered, with one blank line above and below. All caps are acceptable.
-- `ABSTRACT` heading: third-size Times New Roman, bold, centered, with one blank line above and below.
-- English abstract body: small fourth-size Times New Roman, 1.5-line spacing, first-line indent of four English characters.
-- `Key words：` label: small fourth-size Times New Roman, bold, flush left. Put one character space between `Key` and `words`.
-- English keywords: small fourth-size Times New Roman. Separate terms with two spaces.
+- 英文题目：小二号 Times New Roman，加粗，居中，上下各空一行；可全部大写。
+- `ABSTRACT` 标题：三号 Times New Roman，加粗，居中，上下各空一行。
+- 英文摘要正文：小四号 Times New Roman，1.5 倍行距，首行缩进 4 个英文字符。
+- `Key words：` 标签：小四号 Times New Roman，加粗，顶格；`Key` 和 `words` 之间空 1 个字符。
+- 英文关键词：小四号 Times New Roman；关键词之间空 2 个字符。
 
-## Table of Contents
+## 目录
 
-- `目录` heading: third-size Heiti, centered, with one blank line above and below.
-- TOC and page numbers may be generated automatically.
-- Use one of the two numbering systems consistently.
-- Format 1, common for science and engineering:
-  - Level 1: `第1章  绪论`; small fourth-size SimSun, flush left; put one Chinese-character space after the chapter number.
-  - Level 2: `1.1  项目概况`; small fourth-size SimSun; indent two Chinese characters; put one Chinese-character space after the section number.
-  - Level 3: `1.1.1  项目背景`; small fourth-size SimSun; indent four Chinese characters; put one Chinese-character space after the subsection number.
-- Format 2, common for humanities:
-  - Level 1: `一、绪论`; small fourth-size SimSun, flush left.
-  - Level 2: `（一）二级标题`; small fourth-size SimSun, indent two Chinese characters.
-  - Level 3: `1、三级标题`; small fourth-size SimSun, indent four Chinese characters.
+- `目录` 标题：三号黑体，居中，上下各空一行。
+- 目录和页码可以用 Word 自动生成。
+- 全文只采用一种编号体系，不要混用。
+- 格式一，理工科常用：
+  - 一级：`第1章  绪论`；小四号宋体，顶格；章号后空一个汉字。
+  - 二级：`1.1  项目概况`；小四号宋体，缩进两个汉字；节号后空一个汉字。
+  - 三级：`1.1.1  项目背景`；小四号宋体，缩进四个汉字；小节号后空一个汉字。
+- 格式二，文科常用：
+  - 一级：`一、绪论`；小四号宋体，顶格。
+  - 二级：`（一）二级标题`；小四号宋体，缩进两个汉字。
+  - 三级：`1、三级标题`；小四号宋体，缩进四个汉字。
 
-## Main Body
+## 正文
 
-- Body Chinese text: small fourth-size SimSun.
-- Body English text: small fourth-size Times New Roman.
-- Body paragraphs: 1.5-line spacing, first-line indent of two Chinese characters.
-- Each chapter starts on a new page.
-- Citations in body text: use square brackets and superscript form, such as `[1]`.
-- Subitems: use Chinese parenthesized numerals such as `（1）`, `（2）`, `（3）`.
+- 正文中文：小四号宋体。
+- 正文英文：小四号 Times New Roman。
+- 正文段落：1.5 倍行距，首行缩进两个汉字。
+- 每一章单独起页。
+- 正文文献引用：使用方括号并以上标形式标注，例如 `[1]`。
+- 分项序号：使用中文括号序号，如 `（1）`、`（2）`、`（3）`。
 
-## Body Headings
+## 正文标题
 
-For Format 1:
+格式一：
 
-- Chapter heading, e.g. `第1章  绪论`: third-size Heiti, centered, one blank line above and below, one Chinese-character space after the chapter number.
-- Second-level heading, e.g. `1.1  项目概况`: small fourth-size Heiti, indent two Chinese characters, one Chinese-character space after the number.
-- Third-level heading, e.g. `1.1.1  项目背景`: small fourth-size 楷体GB2312, indent two Chinese characters, one Chinese-character space after the number.
+- 章标题，如 `第1章  绪论`：三号黑体，居中，上下各空一行，章号后空一个汉字。
+- 二级标题，如 `1.1  项目概况`：小四号黑体，缩进两个汉字，编号后空一个汉字。
+- 三级标题，如 `1.1.1  项目背景`：小四号楷体GB2312，缩进两个汉字，编号后空一个汉字。
 
-For Format 2:
+格式二：
 
-- Keep the humanities numbering scheme consistent with the TOC.
-- Match the same size/indent hierarchy: level 1 prominent, level 2 indented two Chinese characters, level 3 indented two Chinese characters or deeper when needed.
+- 与目录中的文科编号体系保持一致。
+- 层级、字号和缩进保持统一：一级标题突出，二级标题缩进两个汉字，三级标题缩进两个汉字或按实际层级更深缩进。
 
-## Equations
+## 公式
 
-- Put displayed equations on separate lines.
-- Number equations with parentheses, such as `(2-1)`.
-- Equation numbering may be by chapter or by whole thesis, but must be continuous with no duplicates or gaps.
-- Put the equation number at the end of the equation line. If an equation wraps, put the number at the end of the final line.
-- For long equations, break preferably at `=`. Otherwise break at `+`, `-`, `×`, or `÷`; put the operator at the beginning of the continued line.
-- Align continued equation lines by the equals sign when possible.
+- 展示公式应另起一行。
+- 公式编号用圆括号，如 `(2-1)`。
+- 公式可按章节编号，也可全文统一编号，但必须连续，不得重复或跳号。
+- 公式编号标在公式所在行行末；公式换行时，编号标在最后一行行末。
+- 长公式优先在 `=` 处转行；否则在 `+`、`-`、`×`、`÷` 等符号处转行，数学符号放在续行行首。
+- 上下式尽量按等号对齐。
 
-## Tables
+## 表格
 
-- Put table number and title above the table, centered.
-- Use one space between table number and title, such as `表2-1 反应器三级旋风分离器设计基本数据表`.
-- Do not put punctuation at the end of table titles.
-- Table numbering may be continuous or chapter-based, but must be continuous with no duplicates or gaps.
-- Use concise three-line tables where possible.
-- Table title: fifth-size Heiti.
-- Table body Chinese text: fifth-size SimSun.
-- Table body English/numeric text: fifth-size Times New Roman.
+- 表序和表题写在表格上方，居中。
+- 表序与表题之间空一格，如 `表2-1 反应器三级旋风分离器设计基本数据表`。
+- 表题末尾不加标点。
+- 表格可全文统一编号，也可按章编号，但必须连续，不得重复或跳号。
+- 表格尽量采用简明三线表。
+- 表题：五号黑体。
+- 表内中文：五号宋体。
+- 表内英文和数字：五号 Times New Roman。
 
-## Figures
+## 图片
 
-- Every figure needs a figure number and title.
-- Figure numbering may be continuous or chapter-based, but must be continuous with no duplicates or gaps.
-- Put figure number and title below the figure, centered.
-- Use one Chinese-character space between figure number and title, such as `图2-1  塔板温度分布图`.
-- Figure title: fifth-size Heiti.
+- 每幅插图必须有图序和图题。
+- 图片可全文统一编号，也可按章编号，但必须连续，不得重复或跳号。
+- 图序和图题标在图片下方，居中。
+- 图序与图题之间空一个汉字，如 `图2-1  塔板温度分布图`。
+- 图题：五号黑体。
 
-## Conclusion, Closing, and Acknowledgments
+## 结束语和致谢
 
-- `结束语` or `致谢` heading: third-size Heiti, centered, with one blank line above and below.
-- Content: Chinese small fourth-size SimSun, English small fourth-size Times New Roman, 1.5-line spacing, first-line indent of two Chinese characters.
+- `结束语` 或 `致谢` 标题：三号黑体，居中，上下各空一行。
+- 内容：中文小四号宋体，英文小四号 Times New Roman，1.5 倍行距，首行缩进两个汉字。
 
-## References
+## 参考文献
 
-- `参考文献` heading: third-size Heiti, centered, with one blank line above and below.
-- List references in the order they appear in the thesis.
-- Use square-bracket numeric labels, top aligned/flush left, such as `[1]`.
-- Put one space after the numeric label.
-- Reference entries: fifth-size 楷体GB2312, 1.5-line spacing.
-- If a reference wraps, align continuation lines with the text after the numeric label.
-- Include literature type markers where applicable, for example `[J]`, `[D]`, `[C]`, `[M]`, `[N]`, `[P]`, `[EB/OL]`, `[R]`, `[S]`.
+- `参考文献` 标题：三号黑体，居中，上下各空一行。
+- 按论文中出现的先后顺序列出参考文献。
+- 序号用方括号数字，顶格书写，如 `[1]`。
+- 序号后空一格。
+- 文献条目：五号楷体GB2312，1.5 倍行距。
+- 文献换行后，续行与上一行序号后的正文对齐。
+- 根据文献类型使用标识码，如 `[J]`、`[D]`、`[C]`、`[M]`、`[N]`、`[P]`、`[EB/OL]`、`[R]`、`[S]`。
 
-## Template Style Notes
+## 模板样式备注
 
-- Template `Normal`: mixed Times New Roman/SimSun, 10.5 pt base, justified.
-- Template `初正文` / style id `Style25`: body-like paragraph, 12 pt, 1.5-line spacing, first-line indent of two Chinese characters.
-- Template `初标2` / style id `2`: heading-like paragraph, Heiti, 12-16 pt depending on direct formatting, outline level set in OOXML.
-- Template `正文1` / style id `15`: reference/back-matter style base.
-- Many exact visual rules in the template are expressed as red/blue text boxes, not ordinary Word body paragraphs. Use OOXML extraction when auditing the template.
+- 模板 `Normal`：Times New Roman/宋体混排，基础字号 10.5 pt，两端对齐。
+- 模板 `初正文` / 样式 ID `Style25`：接近正文样式，12 pt，1.5 倍行距，首行缩进两个汉字。
+- 模板 `初标2` / 样式 ID `2`：接近标题样式，黑体，实际字号常由直接格式调整为 12-16 pt，OOXML 中设置了大纲级别。
+- 模板 `正文1` / 样式 ID `15`：参考文献/后置部分的基础样式。
+- 模板中很多精确视觉规则写在红色/蓝色文本框里，不是普通正文段落。审查模板时应使用 OOXML 提取方式。

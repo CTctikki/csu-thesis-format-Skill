@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Heuristic checker for CSU undergraduate thesis DOCX formatting."""
+"""按中南大学本科毕业论文模板启发式检查 DOCX 排版。"""
 
 from __future__ import annotations
 
@@ -160,11 +160,11 @@ def is_centered(paragraph) -> bool:
 
 
 def paragraph_location(index: int, text: str) -> str:
-    return f"paragraph {index}: {text[:32]}"
+    return f"第 {index} 段：{text[:32]}"
 
 
 def find_body_start(document: Document) -> int:
-    """Return the 1-based paragraph index where the main body likely starts."""
+    """返回正文大概率开始的 1 基段落序号。"""
     candidates = []
     for index, paragraph in enumerate(document.paragraphs, 1):
         text = text_of(paragraph)
@@ -194,7 +194,7 @@ def check_sections(document: Document, report: Report) -> None:
         "footer": 1.75,
     }
     for index, section in enumerate(document.sections, 1):
-        location = f"section {index}"
+        location = f"第 {index} 节"
         values = {
             "page_width": section.page_width.cm,
             "page_height": section.page_height.cm,
@@ -204,14 +204,23 @@ def check_sections(document: Document, report: Report) -> None:
             "right": section.right_margin.cm,
             "footer": section.footer_distance.cm,
         }
+        labels = {
+            "page_width": "页面宽度",
+            "page_height": "页面高度",
+            "top": "上边距",
+            "bottom": "下边距",
+            "left": "左边距",
+            "right": "右边距",
+            "footer": "页脚距边界",
+        }
         for key, expected_value in expected.items():
             if not approx(values[key], expected_value):
-                report.error(location, f"{key} is {values[key]:.2f} cm; expected {expected_value:.2f} cm")
+                report.error(location, f"{labels[key]}为 {values[key]:.2f} cm；模板要求约 {expected_value:.2f} cm")
         header = section.header_distance.cm
         if not (approx(header, 1.25, 0.12) or approx(header, 1.5, 0.12)):
-            report.warn(location, f"header distance is {header:.2f} cm; template uses about 1.25 cm or 1.50 cm")
+            report.warn(location, f"页眉距边界为 {header:.2f} cm；模板通常约为 1.25 cm 或 1.50 cm")
     if document.sections and not document.sections[0].different_first_page_header_footer:
-        report.warn("section 1", "cover/front section should usually use different first page header/footer")
+        report.warn("第 1 节", "封面/前置部分通常应启用“首页不同”的页眉页脚")
 
 
 def check_title_paragraph(index: int, paragraph, report: Report) -> None:
@@ -221,19 +230,19 @@ def check_title_paragraph(index: int, paragraph, report: Report) -> None:
 
     if text in {"摘要", "目录", "参考文献"} or text in {"结束语", "致谢", "结束语(或致谢)"}:
         if not is_centered(paragraph):
-            report.warn(location, "major front/back heading should be centered")
+            report.warn(location, "前置/后置部分一级标题应居中")
         if size and not approx(size, 16, 0.8):
-            report.warn(location, f"heading size is {size} pt; expected third-size about 16 pt")
+            report.warn(location, f"标题字号为 {size} pt；模板要求三号，约 16 pt")
         if not has_font(paragraph, ["黑体", "SimHei"]):
-            report.warn(location, "heading should use Heiti/SimHei")
+            report.warn(location, "标题应使用黑体/SimHei")
 
     if text == "ABSTRACT":
         if not is_centered(paragraph):
-            report.warn(location, "ABSTRACT should be centered")
+            report.warn(location, "ABSTRACT 标题应居中")
         if size and not approx(size, 16, 0.8):
-            report.warn(location, f"ABSTRACT size is {size} pt; expected about 16 pt")
+            report.warn(location, f"ABSTRACT 字号为 {size} pt；模板要求约 16 pt")
         if has_font(paragraph, ["Times New Roman"]) and is_bold(paragraph) is False:
-            report.warn(location, "ABSTRACT should be bold Times New Roman")
+            report.warn(location, "ABSTRACT 应使用加粗 Times New Roman")
 
 
 def check_body_heading(index: int, paragraph, report: Report, body_start: int) -> None:
@@ -245,31 +254,31 @@ def check_body_heading(index: int, paragraph, report: Report, body_start: int) -
 
     if re.match(r"^第[0-9一二三四五六七八九十百]+章\s+\S", text):
         if not is_centered(paragraph):
-            report.warn(location, "chapter heading should be centered")
+            report.warn(location, "章标题应居中")
         if size and not approx(size, 16, 0.8):
-            report.warn(location, f"chapter heading size is {size} pt; expected about 16 pt")
+            report.warn(location, f"章标题字号为 {size} pt；模板要求约 16 pt")
         if not has_font(paragraph, ["黑体", "SimHei"]):
-            report.warn(location, "chapter heading should use Heiti/SimHei")
+            report.warn(location, "章标题应使用黑体/SimHei")
         return
 
     if re.match(r"^\d+\.\d+\.\d+\s+\S", text):
         if size and not approx(size, 12, 0.8):
-            report.warn(location, f"third-level heading size is {size} pt; expected 12 pt")
+            report.warn(location, f"三级标题字号为 {size} pt；模板要求 12 pt")
         if not has_font(paragraph, ["楷", "Kai"]):
-            report.warn(location, "third-level heading should use KaiTi/楷体GB2312")
+            report.warn(location, "三级标题应使用楷体/楷体GB2312")
         chars = first_line_chars(paragraph)
         if chars not in {None, 200, 2}:
-            report.warn(location, "third-level heading should indent about two Chinese characters")
+            report.warn(location, "三级标题应缩进约两个汉字")
         return
 
     if re.match(r"^\d+\.\d+\s+\S", text):
         if size and not approx(size, 12, 0.8):
-            report.warn(location, f"second-level heading size is {size} pt; expected 12 pt")
+            report.warn(location, f"二级标题字号为 {size} pt；模板要求 12 pt")
         if not has_font(paragraph, ["黑体", "SimHei"]):
-            report.warn(location, "second-level heading should use Heiti/SimHei")
+            report.warn(location, "二级标题应使用黑体/SimHei")
         chars = first_line_chars(paragraph)
         if chars not in {None, 200, 2}:
-            report.warn(location, "second-level heading should indent about two Chinese characters")
+            report.warn(location, "二级标题应缩进约两个汉字")
 
 
 def check_caption_or_equation(index: int, paragraph, report: Report, body_start: int) -> None:
@@ -281,23 +290,23 @@ def check_caption_or_equation(index: int, paragraph, report: Report, body_start:
 
     if re.match(r"^表\d+[-－]\d+\s+\S", text):
         if not is_centered(paragraph):
-            report.warn(location, "table title should be centered above the table")
+            report.warn(location, "表题应位于表格上方并居中")
         if size and not approx(size, 10.5, 0.8):
-            report.warn(location, f"table title size is {size} pt; expected fifth-size about 10.5 pt")
+            report.warn(location, f"表题字号为 {size} pt；模板要求五号，约 10.5 pt")
         if not has_font(paragraph, ["黑体", "SimHei"]):
-            report.warn(location, "table title should use Heiti/SimHei")
+            report.warn(location, "表题应使用黑体/SimHei")
 
     if re.match(r"^图\d+[-－]\d+\s+\S", text):
         if not is_centered(paragraph):
-            report.warn(location, "figure title should be centered below the figure")
+            report.warn(location, "图题应位于图片下方并居中")
         if size and not approx(size, 10.5, 0.8):
-            report.warn(location, f"figure title size is {size} pt; expected fifth-size about 10.5 pt")
+            report.warn(location, f"图题字号为 {size} pt；模板要求五号，约 10.5 pt")
         if not has_font(paragraph, ["黑体", "SimHei"]):
-            report.warn(location, "figure title should use Heiti/SimHei")
+            report.warn(location, "图题应使用黑体/SimHei")
 
     if re.fullmatch(r"[（(]\d+[-－]\d+[）)]", text):
         if jc(paragraph) not in {"right", "end"}:
-            report.warn(location, "standalone equation number should be right aligned")
+            report.warn(location, "单独一行的公式编号应右对齐")
 
 
 def looks_like_body(text: str) -> bool:
@@ -326,13 +335,13 @@ def check_body_paragraphs(document: Document, report: Report, body_start: int, r
         location = paragraph_location(index, text)
         line = spacing_multiple(paragraph)
         if line is not None and not approx(line, 1.5, 0.05):
-            report.warn(location, f"body paragraph line spacing is {line}; expected 1.5")
+            report.warn(location, f"正文段落行距为 {line}；模板要求 1.5 倍行距")
         chars = first_line_chars(paragraph)
         if chars not in {None, 200, 2}:
-            report.warn(location, "body paragraph should have first-line indent of about two Chinese characters")
+            report.warn(location, "正文段落应首行缩进约两个汉字")
         size = first_run_size(paragraph)
         if size and not approx(size, 12, 1.0):
-            report.warn(location, f"body text size is {size} pt; expected small fourth-size about 12 pt")
+            report.warn(location, f"正文字号为 {size} pt；模板要求小四号，约 12 pt")
 
 
 def check_keywords(document: Document, report: Report) -> None:
@@ -342,12 +351,12 @@ def check_keywords(document: Document, report: Report) -> None:
             terms = re.split(r"\s{2,}|　|；|;|，|,", text.split("：", 1)[-1].strip())
             terms = [term for term in terms if term]
             if not (3 <= len(terms) <= 8):
-                report.warn(paragraph_location(index, text), f"Chinese keywords count is {len(terms)}; expected 3-8")
+                report.warn(paragraph_location(index, text), f"中文关键词数量为 {len(terms)}；模板要求 3-8 个")
         if text.lower().startswith(("key words", "keywords")):
             terms = re.split(r"\s{2,}|;|,|；|，", re.split(r"[:：]", text, 1)[-1].strip())
             terms = [term for term in terms if term]
             if terms and not (3 <= len(terms) <= 8):
-                report.warn(paragraph_location(index, text), f"English keywords count is {len(terms)}; expected 3-8")
+                report.warn(paragraph_location(index, text), f"英文关键词数量为 {len(terms)}；模板要求 3-8 个")
 
 
 def check_references(document: Document, report: Report) -> None:
@@ -365,23 +374,23 @@ def check_references(document: Document, report: Report) -> None:
             numbers.append(int(match.group(1)))
             size = first_run_size(paragraph)
             if size and not approx(size, 10.5, 1.0):
-                report.warn(paragraph_location(index, text), f"reference entry size is {size} pt; expected fifth-size about 10.5 pt")
+                report.warn(paragraph_location(index, text), f"参考文献条目字号为 {size} pt；模板要求五号，约 10.5 pt")
             if not has_font(paragraph, ["楷", "Kai"]):
-                report.warn(paragraph_location(index, text), "reference entry should use KaiTi/楷体GB2312")
+                report.warn(paragraph_location(index, text), "参考文献条目应使用楷体/楷体GB2312")
     if numbers:
         expected = list(range(1, len(numbers) + 1))
         if numbers != expected:
-            report.warn("references", f"reference numbers are {numbers}; expected continuous order {expected}")
+            report.warn("参考文献", f"参考文献编号为 {numbers}；应按出现顺序连续编号为 {expected}")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("docx", type=Path)
-    parser.add_argument("--strict", action="store_true", help="exit non-zero when errors are found")
+    parser.add_argument("--strict", action="store_true", help="发现 ERROR 时以非零状态码退出")
     args = parser.parse_args()
 
     if not args.docx.exists():
-        raise SystemExit(f"File not found: {args.docx}")
+        raise SystemExit(f"找不到文件：{args.docx}")
 
     document = Document(str(args.docx))
     report = Report()
@@ -399,24 +408,25 @@ def main() -> int:
     check_keywords(document, report)
     check_references(document, report)
 
-    print(f"# CSU Thesis DOCX Check: {args.docx.name}\n")
-    print("## Summary")
-    print(f"- Errors: {report.error_count}")
-    print(f"- Warnings: {report.warn_count}")
-    print(f"- Paragraphs checked: {len(document.paragraphs)}")
-    print(f"- Sections checked: {len(document.sections)}")
-    print(f"- Tables found: {len(document.tables)}")
-    print(f"- Main body starts near paragraph: {body_start}")
+    print(f"# 中南大学论文 DOCX 检查报告：{args.docx.name}\n")
+    print("## 汇总")
+    print(f"- 错误：{report.error_count}")
+    print(f"- 提醒：{report.warn_count}")
+    print(f"- 已检查段落数：{len(document.paragraphs)}")
+    print(f"- 已检查节数：{len(document.sections)}")
+    print(f"- 发现表格数：{len(document.tables)}")
+    print(f"- 正文大约从第 {body_start} 段开始")
 
-    print("\n## Findings")
+    print("\n## 问题清单")
     if not report.findings:
-        print("- No obvious CSU-format issues found by the heuristic checker.")
+        print("- 启发式检查未发现明显的中南大学模板格式问题。")
     else:
+        level_labels = {"ERROR": "错误", "WARN": "提醒", "INFO": "信息"}
         for finding in report.findings:
-            print(f"- [{finding.level}] {finding.location}: {finding.message}")
+            print(f"- [{level_labels.get(finding.level, finding.level)}] {finding.location}：{finding.message}")
 
-    print("\n## Reminder")
-    print("- This checker is heuristic. Render the DOCX to PDF and inspect cover, abstracts, TOC, chapter starts, captions, and references visually.")
+    print("\n## 提醒")
+    print("- 本脚本为启发式检查。最终请将 DOCX 渲染为 PDF，重点目视检查封面、摘要、目录、每章首页、题注和参考文献。")
 
     return 1 if args.strict and report.error_count else 0
 

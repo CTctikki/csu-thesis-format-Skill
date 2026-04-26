@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract a compact formatting inventory from a Word DOCX file."""
+"""从 Word DOCX 文件中提取简明版式和样式清单。"""
 
 from __future__ import annotations
 
@@ -175,59 +175,59 @@ def print_dict(data: dict, indent: str = "  ") -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("docx", type=Path)
-    parser.add_argument("--samples", type=int, default=40, help="number of XML paragraph samples")
+    parser.add_argument("--samples", type=int, default=40, help="输出的 XML 段落样例数量")
     args = parser.parse_args()
 
     docx_path = args.docx
     if not docx_path.exists():
-        raise SystemExit(f"File not found: {docx_path}")
+        raise SystemExit(f"找不到文件：{docx_path}")
 
     document = Document(str(docx_path))
-    print(f"# DOCX Format Report: {docx_path.name}\n")
+    print(f"# DOCX 版式报告：{docx_path.name}\n")
 
-    print("## Sections")
+    print("## 分节信息")
     for index, section in enumerate(document.sections, 1):
-        print(f"- Section {index}:")
-        print(f"  - page: {round(section.page_width.cm, 3)} cm x {round(section.page_height.cm, 3)} cm")
+        print(f"- 第 {index} 节：")
+        print(f"  - 页面：{round(section.page_width.cm, 3)} cm x {round(section.page_height.cm, 3)} cm")
         print(
-            "  - margins: "
-            f"top {round(section.top_margin.cm, 3)} cm, "
-            f"bottom {round(section.bottom_margin.cm, 3)} cm, "
-            f"left {round(section.left_margin.cm, 3)} cm, "
-            f"right {round(section.right_margin.cm, 3)} cm"
+            "  - 页边距："
+            f"上 {round(section.top_margin.cm, 3)} cm，"
+            f"下 {round(section.bottom_margin.cm, 3)} cm，"
+            f"左 {round(section.left_margin.cm, 3)} cm，"
+            f"右 {round(section.right_margin.cm, 3)} cm"
         )
         print(
-            "  - header/footer: "
-            f"header {round(section.header_distance.cm, 3)} cm, "
-            f"footer {round(section.footer_distance.cm, 3)} cm, "
-            f"different_first_page={section.different_first_page_header_footer}"
+            "  - 页眉/页脚："
+            f"页眉距边界 {round(section.header_distance.cm, 3)} cm，"
+            f"页脚距边界 {round(section.footer_distance.cm, 3)} cm，"
+            f"首页不同={section.different_first_page_header_footer}"
         )
 
     body_counts = Counter(p.style.name for p in document.paragraphs if p.text.strip())
-    print("\n## Body Paragraph Styles")
+    print("\n## 正文段落样式统计")
     for name, count in body_counts.most_common():
         print(f"- {name}: {count}")
 
-    print(f"\n## Tables\n- Count: {len(document.tables)}")
+    print(f"\n## 表格\n- 数量：{len(document.tables)}")
     for index, table in enumerate(document.tables[:10], 1):
         rows = len(table.rows)
         cols = len(table.columns)
         preview = " | ".join(" ".join(cell.text.split()) for cell in table.rows[0].cells) if rows else ""
-        print(f"- Table {index}: {rows} rows x {cols} columns; first row: {preview[:120]}")
+        print(f"- 第 {index} 个表格：{rows} 行 x {cols} 列；首行：{preview[:120]}")
 
     styles = style_definitions(docx_path)
-    print("\n## Used Style Definitions")
+    print("\n## 已使用样式定义")
     for name in body_counts:
         print(f"- {name}")
-        print_dict(styles.get(name, {"note": "style not found in styles.xml"}), "  ")
+        print_dict(styles.get(name, {"说明": "styles.xml 中未找到该样式"}), "  ")
 
-    print("\n## XML Paragraph Samples")
+    print("\n## XML 段落样例")
     for index, sample in enumerate(xml_paragraph_samples(docx_path, args.samples), 1):
-        print(f"- Sample {index}: {sample['text']}")
+        print(f"- 样例 {index}：{sample['text']}")
         if sample["paragraph"]:
-            print(f"  - paragraph: {sample['paragraph']}")
+            print(f"  - 段落属性：{sample['paragraph']}")
         if sample["run"]:
-            print(f"  - run: {sample['run']}")
+            print(f"  - 字符属性：{sample['run']}")
 
     return 0
 
