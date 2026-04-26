@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+tmp/
+*.pdf
+*.png
+render_check/

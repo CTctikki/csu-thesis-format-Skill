@@ -1,0 +1,4 @@
+interface:
+  display_name: "CSU Thesis Format"
+  short_description: "CSU thesis Word formatting and validation assistant"
+  default_prompt: "Use $csu-thesis-format to format and check my CSU undergraduate thesis DOCX."
