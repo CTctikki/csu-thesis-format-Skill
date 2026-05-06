@@ -1,6 +1,6 @@
 # 中南大学本科毕业论文排版 Skill
 
-这个仓库把中南大学本科毕业设计(论文) Word 模板中的排版要求整理成一个可复用的 Codex skill，并附带原始模板、转换后的 DOCX 模板、排版规则文档和自动检查脚本。
+这个仓库把中南大学本科毕业设计(论文) Word 模板中的排版要求和真实修订流程整理成一个可复用的 Codex skill，并附带原始模板、转换后的 DOCX 模板、排版规则文档和自动检查脚本。
 
 目标很简单：以后中国学生或任意 AI agent 只要读完这个仓库，就能更稳定地辅助中南大学本科毕业论文排版、格式检查和模板比对。
 
@@ -16,6 +16,8 @@
 │   └── 附件6：中南大学毕业设计(论文)模版.doc
 ├── references/
 │   └── csu-thesis-format-rules.md
+│   ├── csu-thesis-revision-playbook.md
+│   └── csu-thesis-real-world-failure-modes.md
 └── scripts/
     ├── check_csu_thesis_docx.py
     └── extract_docx_format.py
@@ -25,6 +27,8 @@
 
 - `SKILL.md`：给 Codex/agent 读取的 skill 入口，说明什么时候使用、如何检查和修改论文格式。
 - `references/csu-thesis-format-rules.md`：从模板中提炼出的中文排版规则，是主要规范依据。
+- `references/csu-thesis-revision-playbook.md`：从真实论文修订中提炼出的稳定工作顺序。
+- `references/csu-thesis-real-world-failure-modes.md`：目录重复、标题变蓝、页眉异常、公式编号等高频坑点。
 - `assets/附件6：中南大学毕业设计(论文)模版.doc`：学校原始 Word 模板。
 - `assets/csu-thesis-template.docx`：由原始 `.doc` 转换得到的 DOCX 模板，方便脚本和现代 Word 工具处理。
 - `scripts/check_csu_thesis_docx.py`：按中南大学模板规则对 DOCX 做启发式格式检查。
@@ -69,8 +73,9 @@ references/csu-thesis-format-rules.md
 1. 先备份用户论文。
 2. 使用 `extract_docx_format.py` 提取现有格式。
 3. 使用 `check_csu_thesis_docx.py` 生成检查报告。
-4. 按 `references/csu-thesis-format-rules.md` 修复页面设置、标题、正文、图表、公式和参考文献。
-5. 导出 PDF 进行视觉检查，重点查看封面、摘要、目录、每章首页、图表页和参考文献页。
+4. 继续阅读 `references/csu-thesis-revision-playbook.md`，按真实定稿顺序处理 section、页码、目录、页眉页脚和公式。
+5. 遇到目录重复、标题变蓝、页眉不对、公式像正文等问题时，查 `references/csu-thesis-real-world-failure-modes.md`。
+6. 导出 PDF 或页面截图进行视觉检查，重点查看封面、摘要、目录、每章首页、公式页、图表页和参考文献页。
 
 ## 安装为 Codex Skill
 
@@ -160,13 +165,7 @@ python scripts/extract_docx_format.py path/to/你的论文.docx
 2. 重新提取模板样式和说明文字。
 3. 更新 `references/csu-thesis-format-rules.md`。
 4. 如检查逻辑变化，更新 `scripts/check_csu_thesis_docx.py`。
-5. 运行 skill 校验：
-
-```bash
-python path/to/quick_validate.py .
-```
-
-6. 用模板和至少一篇真实论文试跑两个脚本。
+5. 用模板和至少一篇真实论文试跑两个脚本，并手动核对目录、页眉页脚和公式页。
 
 ## 重要说明
 

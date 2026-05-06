@@ -7,6 +7,7 @@ import argparse
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from zipfile import ZipFile
 
 from docx import Document
 
@@ -183,6 +184,11 @@ def find_references_start(document: Document) -> int | None:
     return None
 
 
+def docx_member_text(path: Path, member: str) -> str:
+    with ZipFile(path) as archive:
+        return archive.read(member).decode("utf-8", errors="ignore")
+
+
 def check_sections(document: Document, report: Report) -> None:
     expected = {
         "page_width": 21.0,
@@ -221,6 +227,96 @@ def check_sections(document: Document, report: Report) -> None:
             report.warn(location, f"页眉距边界为 {header:.2f} cm；模板通常约为 1.25 cm 或 1.50 cm")
     if document.sections and not document.sections[0].different_first_page_header_footer:
         report.warn("第 1 节", "封面/前置部分通常应启用“首页不同”的页眉页脚")
+
+
+def check_toc_and_fields(docx_path: Path, document: Document, report: Report, body_start: int) -> None:
+    toc_title = None
+    for index, paragraph in enumerate(document.paragraphs, 1):
+        if text_of(paragraph) == "目录":
+            toc_title = index
+            break
+    document_xml = docx_member_text(docx_path, "word/document.xml")
+    has_toc_field = "TOC " in document_xml
+    if toc_title is None:
+        report.warn("目录", "未找到“目录”标题")
+        return
+
+    toc_lines = []
+    for index in range(toc_title + 1, min(body_start, len(document.paragraphs) + 1)):
+        text = text_of(document.paragraphs[index - 1])
+        if text:
+            toc_lines.append(text)
+
+    repeated_ch1 = sum(1 for text in toc_lines if re.match(r"^第1章", text))
+    if repeated_ch1 > 1:
+        report.warn("目录", "目录中检测到重复的“第1章”起始条目，通常表示静态目录和新目录共存")
+
+    if has_toc_field and toc_lines:
+        report.info("目录", "DOCX 中仍包含 TOC 域；如果目标是最终交付版，建议更新后静态定稿")
+
+
+def check_heading_theme_chain(docx_path: Path, report: Report) -> None:
+    styles_xml = docx_member_text(docx_path, "word/styles.xml")
+    for style_id in ["1", "21", "10", "22"]:
+        pattern = rf'<w:style[^>]*w:styleId="{style_id}".*?</w:style>'
+        match = re.search(pattern, styles_xml, re.S)
+        if not match:
+            continue
+        style_xml = match.group(0)
+        if 'themeColor="accent1"' in style_xml or 'w:themeColor="accent1"' in style_xml:
+            report.warn(f"样式 {style_id}", "标题样式链仍引用 accent1 主题色，预览中可能显示为蓝色而非黑色")
+
+
+def check_header_assets(docx_path: Path, report: Report) -> None:
+    with ZipFile(docx_path) as archive:
+        header_rels = [name for name in archive.namelist() if name.startswith("word/_rels/header") and name.endswith(".rels")]
+        image_header_rels = 0
+        for rel in header_rels:
+            rel_xml = archive.read(rel).decode("utf-8", errors="ignore")
+            if "relationships/image" in rel_xml:
+                image_header_rels += 1
+    if image_header_rels == 0:
+        report.warn("页眉", "未检测到页眉图片关系；若模板要求左侧校徽校名，当前文件可能只有纯文字页眉")
+
+
+def looks_like_display_formula(text: str) -> bool:
+    if len(text) > 160:
+        return False
+    if text.startswith(("式中", "其中", "则可通过", "表", "图", "第", "摘要", "目录", "参考文献")):
+        return False
+    return any(token in text for token in ["=", "Σ", "ρ", "α", "λ", "×", "/"]) and not text.endswith("。")
+
+
+def check_display_formulas(document: Document, report: Report, body_start: int, references_start: int | None, docx_path: Path) -> None:
+    document_xml = docx_member_text(docx_path, "word/document.xml")
+    omath_count = document_xml.count("<m:oMath") + document_xml.count("<m:oMathPara")
+    formula_numbers: dict[str, list[int]] = {}
+
+    for index, paragraph in enumerate(document.paragraphs, 1):
+        if index < body_start:
+            continue
+        if references_start is not None and index >= references_start:
+            continue
+        text = text_of(paragraph)
+        if not looks_like_display_formula(text):
+            continue
+        location = paragraph_location(index, text)
+        match = re.search(r"[（(](\d+)[-－](\d+)[）)]\s*$", text)
+        if match:
+            chapter = match.group(1)
+            number = int(match.group(2))
+            formula_numbers.setdefault(chapter, []).append(number)
+        else:
+            report.warn(location, "疑似展示型公式未编号，或公式编号不在行末")
+
+    for chapter, values in formula_numbers.items():
+        ordered = sorted(values)
+        expected = list(range(1, len(ordered) + 1))
+        if ordered != expected:
+            report.warn(f"第 {chapter} 章公式", f"公式编号为 {ordered}；应连续为 {expected}")
+
+    if omath_count == 0 and formula_numbers:
+        report.info("公式", "未检测到 Word OMath 公式对象；当前文档可能使用文本/表格伪公式布局")
 
 
 def check_title_paragraph(index: int, paragraph, report: Report) -> None:
@@ -398,6 +494,10 @@ def main() -> int:
     references_start = find_references_start(document)
 
     check_sections(document, report)
+    check_toc_and_fields(args.docx, document, report, body_start)
+    check_heading_theme_chain(args.docx, report)
+    check_header_assets(args.docx, report)
+    check_display_formulas(document, report, body_start, references_start, args.docx)
     for index, paragraph in enumerate(document.paragraphs, 1):
         if not text_of(paragraph):
             continue
