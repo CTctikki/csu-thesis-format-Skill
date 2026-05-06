@@ -19,8 +19,10 @@
 │   ├── csu-thesis-revision-playbook.md
 │   └── csu-thesis-real-world-failure-modes.md
 └── scripts/
+    ├── audit_csu_word_structures.py
     ├── check_csu_thesis_docx.py
-    └── extract_docx_format.py
+    ├── extract_docx_format.py
+    └── test_audit_csu_word_structures.py
 ```
 
 主要文件说明：
@@ -33,6 +35,7 @@
 - `assets/csu-thesis-template.docx`：由原始 `.doc` 转换得到的 DOCX 模板，方便脚本和现代 Word 工具处理。
 - `scripts/check_csu_thesis_docx.py`：按中南大学模板规则对 DOCX 做启发式格式检查。
 - `scripts/extract_docx_format.py`：提取 DOCX 的分节、样式、表格和段落格式信息，便于排版前诊断。
+- `scripts/audit_csu_word_structures.py`：专项审计 Word 结构层问题，如页眉页脚、目录域、页码分节、公式对象和展示公式编号。
 
 ## 适用场景
 
@@ -72,10 +75,11 @@ references/csu-thesis-format-rules.md
 
 1. 先备份用户论文。
 2. 使用 `extract_docx_format.py` 提取现有格式。
-3. 使用 `check_csu_thesis_docx.py` 生成检查报告。
-4. 继续阅读 `references/csu-thesis-revision-playbook.md`，按真实定稿顺序处理 section、页码、目录、页眉页脚和公式。
-5. 遇到目录重复、标题变蓝、页眉不对、公式像正文等问题时，查 `references/csu-thesis-real-world-failure-modes.md`。
-6. 导出 PDF 或页面截图进行视觉检查，重点查看封面、摘要、目录、每章首页、公式页、图表页和参考文献页。
+3. 使用 `check_csu_thesis_docx.py` 生成启发式检查报告。
+4. 使用 `audit_csu_word_structures.py` 专查 Word 结构层问题。
+5. 继续阅读 `references/csu-thesis-revision-playbook.md`，按真实定稿顺序处理 section、页码、目录、页眉页脚和公式。
+6. 遇到目录重复、标题变蓝、页眉不对、公式像正文等问题时，查 `references/csu-thesis-real-world-failure-modes.md`。
+7. 导出 PDF 或页面截图进行视觉检查，重点查看封面、摘要、目录、每章首页、公式页、图表页和参考文献页。
 
 ## 安装为 Codex Skill
 
@@ -128,6 +132,22 @@ python scripts/check_csu_thesis_docx.py path/to/你的论文.docx
 - 关键词数量和参考文献编号连续性提示
 
 注意：该脚本是启发式检查工具，不能替代人工审阅。Word 文档可能包含文本框、域代码、直接格式、图片公式等复杂内容，最终仍应导出 PDF 后目视确认。
+
+## 审计 Word 结构层
+
+运行：
+
+```bash
+python scripts/audit_csu_word_structures.py path/to/你的论文.docx
+```
+
+这个脚本重点输出：
+
+- 分节、页码格式和页眉页脚关系
+- 自动目录域与静态目录并存风险
+- 页眉图片/图片关系文件是否存在
+- OMath 公式对象数量
+- 展示型公式候选和编号连续性
 
 ## 提取文档样式
 

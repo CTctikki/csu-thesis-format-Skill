@@ -23,6 +23,7 @@ description: Use when editing, auditing, or finalizing Central South University 
 ```bash
 python scripts/extract_docx_format.py path/to/thesis.docx
 python scripts/check_csu_thesis_docx.py path/to/thesis.docx
+python scripts/audit_csu_word_structures.py path/to/thesis.docx
 ```
 6. 按固定顺序修：
    - `section / 分页 / 页码`
@@ -71,3 +72,5 @@ python scripts/check_csu_thesis_docx.py path/to/thesis.docx
   看 section、style、header/footer、table、XML 样例。
 - `scripts/check_csu_thesis_docx.py`
   快速发现格式和结构风险，尤其是目录、页码、公式、标题颜色链等。
+- `scripts/audit_csu_word_structures.py`
+  专查 Word 结构层：分节页码、目录域/静态目录、页眉页脚图片关系、公式对象与展示公式编号。
