@@ -1,0 +1,93 @@
+{
+  "tableWidthsCm": {
+    "left": 1.2,
+    "formula": 12.2,
+    "number": 1.8
+  },
+  "equations": [
+    {
+      "tableIndex": 3,
+      "rows": [
+        {
+          "formula": "m_(WC)=W_(wt)[TIMES](M_(W)+M_(C))/M_(W)",
+          "number": "(2-1)",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "tableIndex": 4,
+      "rows": [
+        {
+          "formula": "V_(WC)=m_(WC)/[RHO]_(WC),",
+          "number": "",
+          "align": "left",
+          "leftIndentCm": 1.7
+        },
+        {
+          "formula": "V_(Co)=Co_(wt)/[RHO]_(Co),  V_(Ni)=Ni_(wt)/[RHO]_(Ni)",
+          "number": "(2-2)",
+          "align": "left",
+          "leftIndentCm": 1.7
+        }
+      ]
+    },
+    {
+      "tableIndex": 5,
+      "rows": [
+        {
+          "formula": "f_(WC)=V_(WC)/(V_(WC)+V_(Co)+V_(Ni))",
+          "number": "(2-3)",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "tableIndex": 6,
+      "rows": [
+        {
+          "formula": "x_(Co)=Co_(wt)/(Co_(wt)+Ni_(wt))[TIMES]100%,",
+          "number": "",
+          "align": "left",
+          "leftIndentCm": 1.7
+        },
+        {
+          "formula": "x_(Ni)=Ni_(wt)/(Co_(wt)+Ni_(wt))[TIMES]100%",
+          "number": "(2-4)",
+          "align": "left",
+          "leftIndentCm": 1.7
+        }
+      ]
+    },
+    {
+      "tableIndex": 9,
+      "rows": [
+        {
+          "formula": "a_(WC)=f_(WC)^(2/3)",
+          "number": "(2-5)",
+          "align": "center"
+        },
+        {
+          "formula": "A_(sp)=2f_(WC)/d_(WC)",
+          "number": "(2-6)",
+          "align": "center"
+        },
+        {
+          "formula": "T_(norm)=(T-300)/900",
+          "number": "(2-7)",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "tableIndex": 11,
+      "rows": [
+        {
+          "formula": "MAPE=(1/n)[SUM]|k_(exp)-k_(pred)|/k_(exp)[TIMES]100%",
+          "number": "(2-8)",
+          "align": "center"
+        }
+      ]
+    }
+  ]
+}

@@ -15,10 +15,13 @@
 │   ├── csu-thesis-template.docx
 │   └── 附件6：中南大学毕业设计(论文)模版.doc
 ├── references/
-│   └── csu-thesis-format-rules.md
+│   ├── csu-thesis-format-rules.md
 │   ├── csu-thesis-revision-playbook.md
 │   └── csu-thesis-real-world-failure-modes.md
+│   ├── csu-thesis-word-equation-objects.md
+│   └── formula-object-config-example.json
 └── scripts/
+    ├── repair_formula_objects_with_word.ps1
     ├── audit_csu_word_structures.py
     ├── check_csu_thesis_docx.py
     ├── extract_docx_format.py
@@ -31,11 +34,13 @@
 - `references/csu-thesis-format-rules.md`：从模板中提炼出的中文排版规则，是主要规范依据。
 - `references/csu-thesis-revision-playbook.md`：从真实论文修订中提炼出的稳定工作顺序。
 - `references/csu-thesis-real-world-failure-modes.md`：目录重复、标题变蓝、页眉异常、公式编号等高频坑点。
+- `references/csu-thesis-word-equation-objects.md`：把伪公式恢复成真正 Word 公式对象的验证方法、版式规则和脚本用法。
 - `assets/附件6：中南大学毕业设计(论文)模版.doc`：学校原始 Word 模板。
 - `assets/csu-thesis-template.docx`：由原始 `.doc` 转换得到的 DOCX 模板，方便脚本和现代 Word 工具处理。
 - `scripts/check_csu_thesis_docx.py`：按中南大学模板规则对 DOCX 做启发式格式检查。
 - `scripts/extract_docx_format.py`：提取 DOCX 的分节、样式、表格和段落格式信息，便于排版前诊断。
 - `scripts/audit_csu_word_structures.py`：专项审计 Word 结构层问题，如页眉页脚、目录域、页码分节、公式对象和展示公式编号。
+- `scripts/repair_formula_objects_with_word.ps1`：在 Windows + Microsoft Word 环境下，用 Word COM 把展示公式重建为真正的公式对象。
 
 ## 适用场景
 
@@ -79,7 +84,8 @@ references/csu-thesis-format-rules.md
 4. 使用 `audit_csu_word_structures.py` 专查 Word 结构层问题。
 5. 继续阅读 `references/csu-thesis-revision-playbook.md`，按真实定稿顺序处理 section、页码、目录、页眉页脚和公式。
 6. 遇到目录重复、标题变蓝、页眉不对、公式像正文等问题时，查 `references/csu-thesis-real-world-failure-modes.md`。
-7. 导出 PDF 或页面截图进行视觉检查，重点查看封面、摘要、目录、每章首页、公式页、图表页和参考文献页。
+7. 遇到 `OMaths.Count = 0`、公式只是文本、或必须恢复为真正 Word 公式对象时，继续读 `references/csu-thesis-word-equation-objects.md`，必要时直接用 `scripts/repair_formula_objects_with_word.ps1`。
+8. 导出 PDF 或页面截图进行视觉检查，重点查看封面、摘要、目录、每章首页、公式页、图表页和参考文献页。
 
 ## 安装为 Codex Skill
 
@@ -108,6 +114,12 @@ git clone https://github.com/CTctikki/csu-thesis-format-Skill.git "$env:USERPROF
 ```bash
 pip install python-docx lxml
 ```
+
+如果要修复真正的 Word 公式对象，还需要：
+
+- Windows
+- Microsoft Word
+- PowerShell
 
 如果需要把旧版 `.doc` 转成 `.docx`，建议安装 LibreOffice，并使用：
 

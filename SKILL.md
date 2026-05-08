@@ -12,32 +12,34 @@ description: Use when editing, auditing, or finalizing Central South University 
 - 用户提到“中南大学”“本科毕业设计(论文)”模板、学长论文、学院格式。
 - 需要处理 `.docx` 或旧 `.doc` 的论文定稿排版。
 - 需要核对封面、摘要、目录、页眉页脚、页码、公式、图表、参考文献。
-- 出现真实 Word 疑难：目录重复、目录页码漂移、标题在预览里变蓝、页眉和学长不一样、公式只是文本、文件只读/锁定、Word 和预览不一致。
+- 出现真实 Word 疑难：目录重复、目录页码漂移、标题在预览里变蓝、页眉和学长不一样、公式只是文本、公式对象被改坏、文件只读/锁定、Word 和预览不一致。
 
 ## Required Workflow
 1. 先读 `references/csu-thesis-format-rules.md`，锁定学校硬规则。
 2. 如果是接近提交的真实论文，继续读 `references/csu-thesis-revision-playbook.md`。
 3. 如果出现 Word/预览/目录/页眉/颜色异常，再读 `references/csu-thesis-real-world-failure-modes.md`。
-4. 编辑前先备份并复制成新文件版本，不在原件上硬覆盖。
-5. 先跑：
+4. 如果展示公式只是文本、`OMaths.Count = 0`、或者必须恢复为真正的 Word 公式对象，再读 `references/csu-thesis-word-equation-objects.md`。
+5. 编辑前先备份并复制成新文件版本，不在原件上硬覆盖。
+6. 先跑：
 ```bash
 python scripts/extract_docx_format.py path/to/thesis.docx
 python scripts/check_csu_thesis_docx.py path/to/thesis.docx
 python scripts/audit_csu_word_structures.py path/to/thesis.docx
 ```
-6. 按固定顺序修：
+7. 按固定顺序修：
    - `section / 分页 / 页码`
    - `封面 / 中文摘要 / 英文摘要 / 目录`
    - `正文标题 / 正文段落 / 标题颜色链`
    - `图题 / 表题 / 表格 / 公式 / 参考文献`
-7. 自动目录、页码域、页眉页脚、字段更新放到最后一轮，在 Word 中完成。
-8. 最终必须渲染并人工复核关键页：封面、摘要、目录、正文首页、公式页、图表密集页、参考文献页。
+8. 自动目录、页码域、页眉页脚、字段更新放到最后一轮，在 Word 中完成。
+9. 最终必须渲染并人工复核关键页：封面、摘要、目录、正文首页、公式页、图表密集页、参考文献页。
 
 ## Hard Rules
 - `section` 先于页码。封面、摘要、英文摘要、目录、正文至少分开思考。
 - 自动目录只适合作为定稿动作。脚本阶段允许静态目录占位，最终交导师时优先交 `静态定稿目录`。
 - 标题颜色要改 `样式层 + 链接字符样式 + 主题色链`，不能只刷某个 run。
 - 公式编号必须全文只用一种方案；推荐按章编号，如 `(2-1)`。
+- 当公式已经被改坏、必须恢复为真正的 Word 公式对象时，优先走 `Word COM + OMaths.Add() + BuildUp()` 路线，不要再用 `python-docx` 直接覆盖公式正文。
 - 渲染器不是 Word。预览通过不等于 Word 通过；最终判断以 Word 真实分页和字段显示为准。
 - 文件被 Word 占用时，优先关掉后台 `WINWORD` 或另存新文件，不在锁文件上硬写。
 
@@ -64,6 +66,8 @@ python scripts/check_csu_thesis_docx.py path/to/thesis.docx
   真实论文从“草稿”到“可交导师终稿”的操作顺序。
 - `references/csu-thesis-real-world-failure-modes.md`
   这次实操验证过的高频坑点、症状、根因和修法。
+- `references/csu-thesis-word-equation-objects.md`
+  展示公式从伪公式恢复为真正 Word 公式对象时的操作方法、验证原则和脚本用法。
 - `assets/csu-thesis-template.docx`
   可供脚本和 Word 现代工具直接复用的 DOCX 模板。
 - `assets/附件6：中南大学毕业设计(论文)模版.doc`
@@ -74,3 +78,5 @@ python scripts/check_csu_thesis_docx.py path/to/thesis.docx
   快速发现格式和结构风险，尤其是目录、页码、公式、标题颜色链等。
 - `scripts/audit_csu_word_structures.py`
   专查 Word 结构层：分节页码、目录域/静态目录、页眉页脚图片关系、公式对象与展示公式编号。
+- `scripts/repair_formula_objects_with_word.ps1`
+  在 Windows + Microsoft Word 环境下，把展示公式表格重建成真正的 Word 公式对象。

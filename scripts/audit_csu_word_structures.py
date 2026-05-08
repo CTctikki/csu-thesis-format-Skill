@@ -165,6 +165,33 @@ def analyze_formulas(document: Document, document_xml: etree._Element, body_star
         else:
             unnumbered.append({"index": index, "text": text[:200]})
 
+    table_candidates = []
+    for table_index, table in enumerate(document.tables, 1):
+        if len(table.columns) < 3:
+            continue
+        for row_index, row in enumerate(table.rows, 1):
+            number_text = row.cells[-1].text.strip()
+            formula_text = " ".join(cell.text.strip() for cell in row.cells[1:-1] if cell.text.strip())
+            has_omath = any("m:oMath" in cell._tc.xml or "m:oMathPara" in cell._tc.xml for cell in row.cells)
+            if not (has_omath or formula_text or number_text):
+                continue
+            match = re.search(r"[（(](\d+)[-－](\d+)[）)]\s*$", number_text)
+            if not (match or has_omath or looks_like_display_formula(formula_text)):
+                continue
+            table_candidates.append(
+                {
+                    "table_index": table_index,
+                    "row_index": row_index,
+                    "number": number_text,
+                    "formula_text": formula_text[:200],
+                    "has_omath": has_omath,
+                }
+            )
+            if match:
+                numbered[match.group(1)].append(int(match.group(2)))
+            elif formula_text:
+                unnumbered.append({"index": f"T{table_index}R{row_index}", "text": formula_text[:200]})
+
     continuity = {}
     for chapter, nums in numbered.items():
         ordered = sorted(nums)
@@ -174,6 +201,7 @@ def analyze_formulas(document: Document, document_xml: etree._Element, body_star
     return {
         "omath_count": omath_count,
         "display_formula_candidates": candidates[:80],
+        "display_formula_table_candidates": table_candidates[:80],
         "unnumbered_display_formulas": unnumbered[:80],
         "numbering_by_chapter": continuity,
     }
@@ -227,9 +255,19 @@ def print_formula_report(formulas: dict) -> None:
     print("\n## 公式对象")
     print(f"- OMath 对象数：{formulas['omath_count']}")
     print(f"- 展示公式候选数：{len(formulas['display_formula_candidates'])}")
+    print(f"- 表格型公式候选数：{len(formulas['display_formula_table_candidates'])}")
     print(f"- 未编号展示公式数：{len(formulas['unnumbered_display_formulas'])}")
+    if formulas["omath_count"] == 0 and (
+        formulas["display_formula_candidates"] or formulas["display_formula_table_candidates"]
+    ):
+        print("- 提示：存在展示公式候选但 OMath 对象数为 0。若已进入定稿阶段，优先用 scripts/repair_formula_objects_with_word.ps1 恢复真正的 Word 公式对象。")
     for chapter, item in sorted(formulas["numbering_by_chapter"].items(), key=lambda x: int(x[0])):
         print(f"- 第 {chapter} 章公式编号：{item['numbers']}，连续={item['continuous']}")
+    for item in formulas["display_formula_table_candidates"][:20]:
+        print(
+            f"  - 表格 T{item['table_index']} 第 {item['row_index']} 行："
+            f"number={item['number'] or 'None'} has_omath={item['has_omath']} text={item['formula_text']}"
+        )
     for item in formulas["unnumbered_display_formulas"][:20]:
         print(f"  - 第 {item['index']} 段：{item['text']}")
 

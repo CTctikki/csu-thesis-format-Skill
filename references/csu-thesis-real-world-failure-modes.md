@@ -87,10 +87,14 @@
 
 **根因**
 - 公式不是 Word 公式对象，或者根本没有统一的显示公式结构。
+- 另一种高频根因是：前一轮脚本或批量替换直接覆盖了公式段落/单元格文本，把本来还能用的公式区域压成了普通文字。
 
 **修法**
 - 最低要求是：单独成行、公式居中、编号独立在行末、编号连续。
-- 不要求一步到位全转 OMML，但要先统一版式。
+- 草稿阶段不要求一步到位全转 OMML，但要先统一版式。
+- 定稿阶段若必须恢复为真正的 Word 公式对象，切换到 `Word COM + OMaths.Add() + BuildUp()` 路线，不要继续用 `python-docx` 直接改公式正文。
+- 长公式要拆成多行，编号落在最后一行右端；续行优先在 `=` 处对齐。
+- 具体操作和脚本见 `references/csu-thesis-word-equation-objects.md` 与 `scripts/repair_formula_objects_with_word.ps1`。
 
 ## 8. 保存失败、只读、Permission denied
 

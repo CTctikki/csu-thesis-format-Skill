@@ -73,6 +73,15 @@ python scripts/check_csu_thesis_docx.py thesis.docx
   - 居中公式本体
   - 行末独立编号
   - 编号连续
+- 但如果已经进入定稿阶段，或前一轮编辑把公式改坏了，优先恢复为真正的 Word 公式对象，具体方法见 `references/csu-thesis-word-equation-objects.md`。
+- 已验证的稳定路线是：
+  1. 复制出新版本。
+  2. 用 Word COM 打开副本。
+  3. 保留“左空白 + 中间公式本体 + 右侧编号”的三列表格结构。
+  4. 往公式单元格写入 Word 线性公式语法。
+  5. 调用 `OMaths.Add(range)` 和 `BuildUp()` 生成公式对象。
+  6. 长公式拆成多行时，编号只放最后一行行末。
+- 不要再用 `python-docx` 的 `paragraph.text` 或 `cell.text` 去覆盖展示公式正文；这很容易把原有公式区域压扁成普通文本。
 - 变量释义和“式中：”说明保持普通正文段落，不混进公式编号链。
 
 ## 7. 标题颜色链规则
