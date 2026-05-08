@@ -124,6 +124,30 @@ powershell -ExecutionPolicy Bypass -File scripts/repair_formula_objects_with_wor
 - 正文说明中的变量用统一下标风格
 - 不要一部分是 `f_WC`，一部分是 `fWC`，一部分又是图片公式截图
 
+可直接复用的脚本：
+
+```text
+scripts/unify_inline_subscripts.py
+```
+
+示例配置：
+
+```text
+references/inline-subscript-config-example.json
+```
+
+调用方式：
+
+```bash
+python scripts/unify_inline_subscripts.py input.docx output.docx references/inline-subscript-config-example.json
+```
+
+### 这条脚本的边界
+
+- 它适合处理“整段正文都是统一正文样式，只是少量变量名需要下标化”的场景。
+- 它会重建目标段落里的 `run`，保留段落级属性和基础字符样式，但不适合处理同一段内已经有很多复杂局部强调、超链接或批注锚点的情况。
+- 如果变量名横跨多个复杂 `run`，或者段内同时混有手工公式截图、域代码、脚注标记，优先在 Word 里人工处理。
+
 ## 验证要求
 
 至少人工检查：

@@ -1,0 +1,25 @@
+{
+  "paragraph_ranges": [
+    {
+      "start": 101,
+      "end": 131
+    }
+  ],
+  "tokens": [
+    { "token": "f_WC", "base": "f", "sub": "WC" },
+    { "token": "x_Co", "base": "x", "sub": "Co" },
+    { "token": "x_Ni", "base": "x", "sub": "Ni" },
+    { "token": "x_Ag", "base": "x", "sub": "Ag" },
+    { "token": "d_WC", "base": "d", "sub": "WC" },
+    { "token": "a_WC", "base": "a", "sub": "WC" },
+    { "token": "A_sp", "base": "A", "sub": "sp" },
+    { "token": "T_norm", "base": "T", "sub": "norm" },
+    { "token": "W_wt", "base": "W", "sub": "wt" },
+    { "token": "M_W", "base": "M", "sub": "W" },
+    { "token": "M_C", "base": "M", "sub": "C" },
+    { "token": "V_WC", "base": "V", "sub": "WC" },
+    { "token": "V_Co", "base": "V", "sub": "Co" },
+    { "token": "V_Ni", "base": "V", "sub": "Ni" },
+    { "token": "k_binder_est", "base": "k", "sub": "binderest" }
+  ]
+}

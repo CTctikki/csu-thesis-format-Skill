@@ -12,7 +12,7 @@ description: Use when editing, auditing, or finalizing Central South University 
 - 用户提到“中南大学”“本科毕业设计(论文)”模板、学长论文、学院格式。
 - 需要处理 `.docx` 或旧 `.doc` 的论文定稿排版。
 - 需要核对封面、摘要、目录、页眉页脚、页码、公式、图表、参考文献。
-- 出现真实 Word 疑难：目录重复、目录页码漂移、标题在预览里变蓝、页眉和学长不一样、公式只是文本、公式对象被改坏、文件只读/锁定、Word 和预览不一致。
+- 出现真实 Word 疑难：目录重复、目录页码漂移、标题在预览里变蓝、页眉和学长不一样、公式只是文本、公式对象被改坏、正文变量只有下划线不是下标、文件只读/锁定、Word 和预览不一致。
 
 ## Required Workflow
 1. 先读 `references/csu-thesis-format-rules.md`，锁定学校硬规则。
@@ -68,6 +68,8 @@ python scripts/check_csu_thesis_docx.py path/to/thesis.docx
   这次实操验证过的高频坑点、症状、根因和修法。
 - `references/csu-thesis-word-equation-objects.md`
   展示公式从伪公式恢复为真正 Word 公式对象时的操作方法、验证原则和脚本用法。
+- `references/inline-subscript-config-example.json`
+  第 2 章变量下标统一的示例配置，可直接按段落范围和变量名复用。
 - `assets/csu-thesis-template.docx`
   可供脚本和 Word 现代工具直接复用的 DOCX 模板。
 - `assets/附件6：中南大学毕业设计(论文)模版.doc`
@@ -80,3 +82,5 @@ python scripts/check_csu_thesis_docx.py path/to/thesis.docx
   专查 Word 结构层：分节页码、目录域/静态目录、页眉页脚图片关系、公式对象与展示公式编号。
 - `scripts/repair_formula_objects_with_word.ps1`
   在 Windows + Microsoft Word 环境下，把展示公式表格重建成真正的 Word 公式对象。
+- `scripts/unify_inline_subscripts.py`
+  把正文中的 `f_WC`、`x_Co`、`T_norm` 一类变量统一成真正的下标 run，而不是裸下划线文本。
