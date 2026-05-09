@@ -117,27 +117,108 @@ def first_run_rpr(paragraph):
     return None
 
 
+def style_chain(style):
+    chain = []
+    current = style
+    while current is not None:
+        chain.append(current)
+        current = current.base_style
+    return chain
+
+
+def effective_jc(paragraph) -> str | None:
+    props = p_pr(paragraph)
+    if props is not None:
+        value = w_attr(props.find(qn("jc")))
+        if value is not None:
+            return value
+    for style in style_chain(paragraph.style):
+        props = style._element.find(qn("pPr"))
+        if props is None:
+            continue
+        value = w_attr(props.find(qn("jc")))
+        if value is not None:
+            return value
+    return None
+
+
+def effective_indent(paragraph, attrs: list[str]) -> str | None:
+    props = p_pr(paragraph)
+    if props is not None:
+        indent = props.find(qn("ind"))
+        if indent is not None:
+            for attr in attrs:
+                value = indent.get(qn(attr))
+                if value is not None:
+                    return value
+    for style in style_chain(paragraph.style):
+        props = style._element.find(qn("pPr"))
+        if props is None:
+            continue
+        indent = props.find(qn("ind"))
+        if indent is None:
+            continue
+        for attr in attrs:
+            value = indent.get(qn(attr))
+            if value is not None:
+                return value
+    return None
+
+
+def effective_run_rpr(paragraph):
+    r_pr = first_run_rpr(paragraph)
+    if r_pr is not None:
+        return r_pr
+    for style in style_chain(paragraph.style):
+        r_pr = style._element.find(qn("rPr"))
+        if r_pr is not None:
+            return r_pr
+    return None
+
+
 def first_run_size(paragraph) -> float | None:
     r_pr = first_run_rpr(paragraph)
-    if r_pr is None:
-        return None
-    size = r_pr.find(qn("sz"))
-    value = w_attr(size)
-    return round(int(value) / 2, 2) if value else None
+    if r_pr is not None:
+        size = r_pr.find(qn("sz"))
+        value = w_attr(size)
+        if value:
+            return round(int(value) / 2, 2)
+    for style in style_chain(paragraph.style):
+        r_pr = style._element.find(qn("rPr"))
+        if r_pr is None:
+            continue
+        size = r_pr.find(qn("sz"))
+        value = w_attr(size)
+        if value:
+            return round(int(value) / 2, 2)
+    return None
 
 
 def first_run_fonts(paragraph) -> set[str]:
-    r_pr = first_run_rpr(paragraph)
-    if r_pr is None:
-        return set()
-    fonts = r_pr.find(qn("rFonts"))
-    if fonts is None:
-        return set()
     result = set()
-    for key in ["ascii", "hAnsi", "eastAsia", "cs"]:
-        value = fonts.get(qn(key))
-        if value:
-            result.add(value)
+    r_pr = first_run_rpr(paragraph)
+    if r_pr is not None:
+        fonts = r_pr.find(qn("rFonts"))
+        if fonts is not None:
+            for key in ["ascii", "hAnsi", "eastAsia", "cs"]:
+                value = fonts.get(qn(key))
+                if value:
+                    result.add(value)
+    if result:
+        return result
+    for style in style_chain(paragraph.style):
+        r_pr = style._element.find(qn("rPr"))
+        if r_pr is None:
+            continue
+        fonts = r_pr.find(qn("rFonts"))
+        if fonts is None:
+            continue
+        for key in ["ascii", "hAnsi", "eastAsia", "cs"]:
+            value = fonts.get(qn(key))
+            if value:
+                result.add(value)
+        if result:
+            return result
     return result
 
 
@@ -148,16 +229,22 @@ def has_font(paragraph, names: list[str]) -> bool:
 
 def is_bold(paragraph) -> bool | None:
     r_pr = first_run_rpr(paragraph)
-    if r_pr is None:
-        return None
-    bold = r_pr.find(qn("b"))
-    if bold is None:
-        return None
-    return w_attr(bold) not in {"0", "false", "False"}
+    if r_pr is not None:
+        bold = r_pr.find(qn("b"))
+        if bold is not None:
+            return w_attr(bold) not in {"0", "false", "False"}
+    for style in style_chain(paragraph.style):
+        r_pr = style._element.find(qn("rPr"))
+        if r_pr is None:
+            continue
+        bold = r_pr.find(qn("b"))
+        if bold is not None:
+            return w_attr(bold) not in {"0", "false", "False"}
+    return None
 
 
 def is_centered(paragraph) -> bool:
-    return jc(paragraph) == "center"
+    return effective_jc(paragraph) == "center"
 
 
 def paragraph_location(index: int, text: str) -> str:
@@ -253,6 +340,23 @@ def check_toc_and_fields(docx_path: Path, document: Document, report: Report, bo
 
     if has_toc_field and toc_lines:
         report.info("目录", "DOCX 中仍包含 TOC 域；如果目标是最终交付版，建议更新后静态定稿")
+
+    title_para = document.paragraphs[toc_title - 1]
+    title_size = first_run_size(title_para)
+    if not is_centered(title_para):
+        report.warn("目录", "“目录”标题应居中")
+    if title_size and not approx(title_size, 16, 0.8):
+        report.warn("目录", f"“目录”标题字号为 {title_size} pt；常见定稿值约为 16 pt")
+
+    for index in range(toc_title + 1, min(body_start, len(document.paragraphs) + 1)):
+        paragraph = document.paragraphs[index - 1]
+        text = text_of(paragraph)
+        if not text:
+            continue
+        location = paragraph_location(index, text)
+        size = first_run_size(paragraph)
+        if size and not (approx(size, 12, 1.0) or approx(size, 10.5, 0.8)):
+            report.warn(location, f"目录条目字号为 {size} pt；当前验证过的定稿样式通常为 10.5 pt 或 12 pt")
 
 
 def check_heading_theme_chain(docx_path: Path, report: Report) -> None:
@@ -473,6 +577,10 @@ def check_references(document: Document, report: Report) -> None:
                 report.warn(paragraph_location(index, text), f"参考文献条目字号为 {size} pt；模板要求五号，约 10.5 pt")
             if not has_font(paragraph, ["楷", "Kai"]):
                 report.warn(paragraph_location(index, text), "参考文献条目应使用楷体/楷体GB2312")
+            left = effective_indent(paragraph, ["left"])
+            hanging = effective_indent(paragraph, ["hanging"])
+            if left != "420" or hanging != "420":
+                report.warn(paragraph_location(index, text), "参考文献条目通常应使用悬挂缩进 420/420")
     if numbers:
         expected = list(range(1, len(numbers) + 1))
         if numbers != expected:
