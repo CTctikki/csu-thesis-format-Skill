@@ -27,8 +27,9 @@ python scripts/check_csu_thesis_docx.py thesis.docx
 4. 再改 section 骨架：封面、中文摘要、英文摘要、目录、正文分页与分节。
 5. 再改页眉页脚、罗马/阿拉伯页码、首页不同、Link to Previous。
 6. 再改标题样式、标题颜色链、图表编号、公式编号。
-7. 最后才做自动目录更新、页码刷新、静态定稿。
-8. 导出并检查关键页。
+7. 再统一正文引用上标、特征下标和指数上标。
+8. 最后才做自动目录更新、页码刷新、静态定稿。
+9. 导出并检查关键页。
 
 ## 3. 定稿模式建议
 
@@ -88,11 +89,20 @@ python scripts/check_csu_thesis_docx.py thesis.docx
 ## 6A. 参考文献规则补充
 
 - 不要只凭第一段 run 的直接格式判断参考文献字体。
+- 正文中的文献引用应是上标 run，例如 `[1]`、`[1-3]`、`[14,15]`；参考文献列表条目前的 `[1]`、`[2]` 不能改成上标。
+- 可用 `scripts/normalize_citations_and_features.py input.docx output.docx` 自动处理正文引用上标，并跳过 `参考文献` 标题之后的文献条目。
 - 中南大学这套模板里，参考文献条目常由 `书目1` 样式统一控制：
   - `楷体_GB2312 + Times New Roman`
   - 五号，约 `10.5 pt`
   - 悬挂缩进
 - 因此，脚本和人工检查都应优先看样式链，而不是只看单个 run 的局部属性。
+
+## 6B. 特征符号上下标规则
+
+- 机器学习特征符号应全篇统一，不要只让某个表格内正确。正文、图题表题、表格表头和公式说明中都应使用相同口径。
+- 常见写法：`d_WC`、`f_WC`、`x_Ni`、`x_Co`、`a_WC`、`A_sp`、`T_norm`，其中 `WC/Ni/Co/sp/norm` 是下标。
+- 指数和单位幂使用上标，例如 `f_WC^(2/3)`、`R^2`、`cm^-3`、`μm^-1`、`mm^2/s`。
+- 可用 `scripts/normalize_citations_and_features.py input.docx output.docx` 处理 `dWC/fWC/xNi/aWC/Asp/Tnorm/fWC2/3/R2/cm-3` 等紧凑写法，也可继续用 `scripts/unify_inline_subscripts.py` 处理带下划线的旧写法。
 
 ## 7. 标题颜色链规则
 

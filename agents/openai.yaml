@@ -1,4 +1,4 @@
 interface:
   display_name: "中南大学论文排版"
-  short_description: "中南大学本科毕业论文 Word 排版、格式检查与修复助手"
+  short_description: "中南大学本科毕业论文 Word 排版、引用上标、特征上下标与格式修复助手"
   default_prompt: "使用 $csu-thesis-format 帮我检查并规范中南大学本科毕业论文 DOCX。"

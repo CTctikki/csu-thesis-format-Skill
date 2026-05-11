@@ -1,6 +1,6 @@
 ---
 name: csu-thesis-format
-description: Use when editing, auditing, or finalizing Central South University undergraduate thesis DOCX/DOC files, especially for cover pages, abstract/TOC pagination, section breaks, headers/footers, heading styles and colors, formulas, figures/tables, and final submission formatting in Word.
+description: Use when editing, auditing, or finalizing Central South University undergraduate thesis DOCX/DOC files, especially for cover pages, abstract/TOC pagination, section breaks, headers/footers, heading styles and colors, formulas, figures/tables, citation superscripts, inline feature subscripts/superscripts, and final submission formatting in Word.
 ---
 
 # 中南大学论文排版
@@ -12,7 +12,7 @@ description: Use when editing, auditing, or finalizing Central South University 
 - 用户提到“中南大学”“本科毕业设计(论文)”模板、学长论文、学院格式。
 - 需要处理 `.docx` 或旧 `.doc` 的论文定稿排版。
 - 需要核对封面、摘要、目录、页眉页脚、页码、公式、图表、参考文献。
-- 出现真实 Word 疑难：目录重复、目录页码漂移、标题在预览里变蓝、页眉和学长不一样、公式只是文本、公式对象被改坏、正文变量只有下划线不是下标、文件只读/锁定、Word 和预览不一致。
+- 出现真实 Word 疑难：目录重复、目录页码漂移、标题在预览里变蓝、页眉和学长不一样、正文引用不是上标、公式只是文本、公式对象被改坏、正文变量/特征只有普通文本或下划线不是下标、指数不是上标、文件只读/锁定、Word 和预览不一致。
 
 ## Required Workflow
 1. 先读 `references/csu-thesis-format-rules.md`，锁定学校硬规则。
@@ -30,7 +30,7 @@ python scripts/audit_csu_word_structures.py path/to/thesis.docx
    - `section / 分页 / 页码`
    - `封面 / 中文摘要 / 英文摘要 / 目录`
    - `正文标题 / 正文段落 / 标题颜色链`
-   - `图题 / 表题 / 表格 / 公式 / 参考文献`
+   - `图题 / 表题 / 表格 / 公式 / 引用上标 / 特征上下标 / 参考文献`
 8. 自动目录、页码域、页眉页脚、字段更新放到最后一轮，在 Word 中完成。
 9. 最终必须渲染并人工复核关键页：封面、摘要、目录、正文首页、公式页、图表密集页、参考文献页。
 
@@ -40,6 +40,8 @@ python scripts/audit_csu_word_structures.py path/to/thesis.docx
 - 标题颜色要改 `样式层 + 链接字符样式 + 主题色链`，不能只刷某个 run。
 - 公式编号必须全文只用一种方案；推荐按章编号，如 `(2-1)`。
 - 当公式已经被改坏、必须恢复为真正的 Word 公式对象时，优先走 `Word COM + OMaths.Add() + BuildUp()` 路线，不要再用 `python-docx` 直接覆盖公式正文。
+- 正文引用统一用方括号数字并设置为真正的上标 run，如 `[1]`、`[1-3]`、`[14,15]`；不要把参考文献列表开头的 `[1]`、`[2]` 改成上标。
+- 特征符号统一用真正的下标/上标 run，不要只用普通字符凑外观：`d_WC`、`f_WC`、`x_Ni`、`x_Co`、`a_WC`、`A_sp`、`T_norm` 等下标化，`f_WC^(2/3)`、`R^2`、`cm^-3`、`μm^-1`、`mm^2/s` 等指数上标化。
 - 渲染器不是 Word。预览通过不等于 Word 通过；最终判断以 Word 真实分页和字段显示为准。
 - 文件被 Word 占用时，优先关掉后台 `WINWORD` 或另存新文件，不在锁文件上硬写。
 
@@ -57,6 +59,11 @@ python scripts/extract_docx_format.py path/to/thesis.docx
 启发式排版检查：
 ```bash
 python scripts/check_csu_thesis_docx.py path/to/thesis.docx
+```
+
+统一正文引用上标和特征上下标：
+```bash
+python scripts/normalize_citations_and_features.py input.docx output.docx
 ```
 
 ## Resources
@@ -84,3 +91,5 @@ python scripts/check_csu_thesis_docx.py path/to/thesis.docx
   在 Windows + Microsoft Word 环境下，把展示公式表格重建成真正的 Word 公式对象。
 - `scripts/unify_inline_subscripts.py`
   把正文中的 `f_WC`、`x_Co`、`T_norm` 一类变量统一成真正的下标 run，而不是裸下划线文本。
+- `scripts/normalize_citations_and_features.py`
+  把正文引用 `[1]`、`[1-3]` 统一成上标，同时把 `dWC/fWC/xNi/aWC/Asp/Tnorm/fWC2/3/R2/cm-3` 等特征和指数拆成真正的下标/上标 run；会跳过参考文献列表条目编号。

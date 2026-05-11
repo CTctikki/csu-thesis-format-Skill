@@ -24,10 +24,12 @@
 └── scripts/
     ├── repair_formula_objects_with_word.ps1
     ├── unify_inline_subscripts.py
+    ├── normalize_citations_and_features.py
     ├── audit_csu_word_structures.py
     ├── check_csu_thesis_docx.py
     ├── extract_docx_format.py
     ├── test_unify_inline_subscripts.py
+    ├── test_normalize_citations_and_features.py
     └── test_audit_csu_word_structures.py
 ```
 
@@ -46,6 +48,7 @@
 - `scripts/audit_csu_word_structures.py`：专项审计 Word 结构层问题，如页眉页脚、目录域、页码分节、公式对象和展示公式编号。
 - `scripts/repair_formula_objects_with_word.ps1`：在 Windows + Microsoft Word 环境下，用 Word COM 把展示公式重建为真正的公式对象。
 - `scripts/unify_inline_subscripts.py`：把第 2 章正文里的变量名从裸下划线文本统一成真正的下标 run。
+- `scripts/normalize_citations_and_features.py`：把正文文献引用统一成上标，同时把 `dWC/fWC/xNi/aWC/Asp/Tnorm/fWC2/3/R2/cm-3` 等特征和指数统一成真正的下标/上标 run。
 
 ## 适用场景
 
@@ -90,8 +93,9 @@ references/csu-thesis-format-rules.md
 5. 继续阅读 `references/csu-thesis-revision-playbook.md`，按真实定稿顺序处理 section、页码、目录、页眉页脚和公式。
 6. 遇到目录重复、标题变蓝、页眉不对、公式像正文等问题时，查 `references/csu-thesis-real-world-failure-modes.md`。
 7. 遇到 `OMaths.Count = 0`、公式只是文本、或必须恢复为真正 Word 公式对象时，继续读 `references/csu-thesis-word-equation-objects.md`，必要时直接用 `scripts/repair_formula_objects_with_word.ps1`。
-8. 如果正文变量出现 `f_WC`、`x_Co`、`T_norm` 这种下划线混排不统一的问题，优先用 `scripts/unify_inline_subscripts.py` 配合 `references/inline-subscript-config-example.json` 处理。
-9. 导出 PDF 或页面截图进行视觉检查，重点查看封面、摘要、目录、每章首页、公式页、图表页和参考文献页。
+8. 如果正文引用还是普通 `[1]`、`[1-3]`，或表格外特征仍是 `dWC/fWC/xNi/aWC/Asp/Tnorm/fWC2/3` 这种紧凑普通文本，优先用 `scripts/normalize_citations_and_features.py` 处理。
+9. 如果正文变量出现 `f_WC`、`x_Co`、`T_norm` 这种下划线混排不统一的问题，也可用 `scripts/unify_inline_subscripts.py` 配合 `references/inline-subscript-config-example.json` 处理。
+10. 导出 PDF 或页面截图进行视觉检查，重点查看封面、摘要、目录、每章首页、公式页、图表页和参考文献页。
 
 ## 安装为 Codex Skill
 
@@ -150,6 +154,19 @@ python scripts/check_csu_thesis_docx.py path/to/你的论文.docx
 - 关键词数量和参考文献编号连续性提示
 
 注意：该脚本是启发式检查工具，不能替代人工审阅。Word 文档可能包含文本框、域代码、直接格式、图片公式等复杂内容，最终仍应导出 PDF 后目视确认。
+
+## 统一引用上标和特征上下标
+
+运行：
+
+```bash
+python scripts/normalize_citations_and_features.py input.docx output.docx
+```
+
+这个脚本用于处理两类高频定稿问题：
+
+- 正文引用 `[1]`、`[1-3]`、`[14,15]` 改为真正的上标 run，并跳过 `参考文献` 标题之后的文献列表编号。
+- 特征符号统一成真正的下标/上标 run，例如 `d_WC`、`f_WC`、`x_Ni`、`a_WC`、`A_sp`、`T_norm`、`f_WC^(2/3)`、`R^2`、`cm^-3`、`μm^-1`、`mm^2/s`。
 
 ## 审计 Word 结构层
 
