@@ -17,7 +17,8 @@
 ├── references/
 │   ├── csu-thesis-format-rules.md
 │   ├── csu-thesis-revision-playbook.md
-│   └── csu-thesis-real-world-failure-modes.md
+│   ├── csu-thesis-real-world-failure-modes.md
+│   ├── csu-thesis-auto-toc-workflow.md
 │   ├── csu-thesis-word-equation-objects.md
 │   └── formula-object-config-example.json
 │   └── inline-subscript-config-example.json
@@ -39,6 +40,7 @@
 - `references/csu-thesis-format-rules.md`：从模板中提炼出的中文排版规则，是主要规范依据。
 - `references/csu-thesis-revision-playbook.md`：从真实论文修订中提炼出的稳定工作顺序。
 - `references/csu-thesis-real-world-failure-modes.md`：目录重复、标题变蓝、页眉异常、公式编号等高频坑点。
+- `references/csu-thesis-auto-toc-workflow.md`：把手打目录改成真正 Word 自动目录时的分节、页码重启、TOC 样式和验收流程。
 - `references/csu-thesis-word-equation-objects.md`：把伪公式恢复成真正 Word 公式对象的验证方法、版式规则和脚本用法。
 - `references/inline-subscript-config-example.json`：统一正文变量下标风格的示例配置。
 - `assets/附件6：中南大学毕业设计(论文)模版.doc`：学校原始 Word 模板。
@@ -92,10 +94,11 @@ references/csu-thesis-format-rules.md
 4. 使用 `audit_csu_word_structures.py` 专查 Word 结构层问题。
 5. 继续阅读 `references/csu-thesis-revision-playbook.md`，按真实定稿顺序处理 section、页码、目录、页眉页脚和公式。
 6. 遇到目录重复、标题变蓝、页眉不对、公式像正文等问题时，查 `references/csu-thesis-real-world-failure-modes.md`。
-7. 遇到 `OMaths.Count = 0`、公式只是文本、或必须恢复为真正 Word 公式对象时，继续读 `references/csu-thesis-word-equation-objects.md`，必要时直接用 `scripts/repair_formula_objects_with_word.ps1`。
-8. 如果正文引用还是普通 `[1]`、`[1-3]`，或表格外特征仍是 `dWC/fWC/xNi/aWC/Asp/Tnorm/fWC2/3` 这种紧凑普通文本，优先用 `scripts/normalize_citations_and_features.py` 处理。
-9. 如果正文变量出现 `f_WC`、`x_Co`、`T_norm` 这种下划线混排不统一的问题，也可用 `scripts/unify_inline_subscripts.py` 配合 `references/inline-subscript-config-example.json` 处理。
-10. 导出 PDF 或页面截图进行视觉检查，重点查看封面、摘要、目录、每章首页、公式页、图表页和参考文献页。
+7. 如果目录是手打静态文本、需要改成真正可更新 TOC，或目录更新后第 1 章页码被带乱，继续读 `references/csu-thesis-auto-toc-workflow.md`。
+8. 遇到 `OMaths.Count = 0`、公式只是文本、或必须恢复为真正 Word 公式对象时，继续读 `references/csu-thesis-word-equation-objects.md`，必要时直接用 `scripts/repair_formula_objects_with_word.ps1`。
+9. 如果正文引用还是普通 `[1]`、`[1-3]`，或表格外特征仍是 `dWC/fWC/xNi/aWC/Asp/Tnorm/fWC2/3` 这种紧凑普通文本，优先用 `scripts/normalize_citations_and_features.py` 处理。
+10. 如果正文变量出现 `f_WC`、`x_Co`、`T_norm` 这种下划线混排不统一的问题，也可用 `scripts/unify_inline_subscripts.py` 配合 `references/inline-subscript-config-example.json` 处理。
+11. 导出 PDF 或页面截图进行视觉检查，重点查看封面、摘要、目录、每章首页、公式页、图表页和参考文献页。
 
 ## 安装为 Codex Skill
 

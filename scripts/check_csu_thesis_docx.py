@@ -334,12 +334,21 @@ def check_toc_and_fields(docx_path: Path, document: Document, report: Report, bo
         if text:
             toc_lines.append(text)
 
+    toc_like_lines = sum(
+        1
+        for text in toc_lines
+        if re.match(r"^(第[0-9一二三四五六七八九十百]+章|\d+\.\d+(\.\d+)?|附录[A-ZＡ-Ｚ]?|致谢|参考文献)", text)
+    )
+
     repeated_ch1 = sum(1 for text in toc_lines if re.match(r"^第1章", text))
     if repeated_ch1 > 1:
         report.warn("目录", "目录中检测到重复的“第1章”起始条目，通常表示静态目录和新目录共存")
 
+    if not has_toc_field and toc_like_lines >= 4:
+        report.warn("目录", "目录更像手打/静态目录，不是可更新 TOC；若要改成自动目录，先删旧目录条目，再补标题层级、分节和页码重启")
+
     if has_toc_field and toc_lines:
-        report.info("目录", "DOCX 中仍包含 TOC 域；如果目标是最终交付版，建议更新后静态定稿")
+        report.info("目录", "DOCX 中存在 TOC 域；如果正文还会继续修改，保留自动目录更方便；若是最终稳定交付版，再决定是否静态定稿")
 
     title_para = document.paragraphs[toc_title - 1]
     title_size = first_run_size(title_para)

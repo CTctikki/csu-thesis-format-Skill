@@ -83,10 +83,16 @@ def analyze_toc(document: Document, document_xml_text: str, body_start: int) -> 
                 lines.append({"index": index, "style": paragraph.style.name, "text": text})
 
     repeated = Counter(text for text in (line["text"] for line in lines) if text.startswith("第"))
+    toc_like_lines = sum(
+        1
+        for line in lines
+        if re.match(r"^(第[0-9一二三四五六七八九十百]+章|\d+\.\d+(\.\d+)?|附录[A-ZＡ-Ｚ]?|致谢|参考文献)", line["text"])
+    )
     return {
         "has_toc_field": "TOC " in document_xml_text,
         "toc_title_index": toc_title,
         "line_count": len(lines),
+        "toc_like_line_count": toc_like_lines,
         "toc_lines": lines[:80],
         "repeated_headings": {k: v for k, v in repeated.items() if v > 1},
     }
@@ -230,6 +236,11 @@ def print_toc_report(toc: dict) -> None:
     print(f"- TOC 域存在：{toc['has_toc_field']}")
     print(f"- 目录标题段落：{toc['toc_title_index']}")
     print(f"- 目录行数：{toc['line_count']}")
+    print(f"- 目录样式条目数：{toc['toc_like_line_count']}")
+    if not toc["has_toc_field"] and toc["toc_like_line_count"] >= 4:
+        print("- 判断：当前目录更像手打/静态目录，不是可更新 TOC")
+    elif toc["has_toc_field"]:
+        print("- 判断：当前目录包含 TOC 域，可作为自动目录继续更新")
     if toc["repeated_headings"]:
         print(f"- 重复目录条目：{toc['repeated_headings']}")
     else:
